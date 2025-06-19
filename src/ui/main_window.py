@@ -12,9 +12,9 @@ BUTTON_PADDING = 12
 
 def load_editor_theme():
     style = ttk.Style()
-    style.configure("Treeview", background="black", fieldbackground="black", foreground="white")
+    #style.configure("Treeview", background="black", fieldbackground="black", foreground="white")
     style.configure("Editor.TFrame", background="#ababab")
-    style.configure("Canvas.TFrame", background="#ffffff", highlightbackground="#cccccc", highlightthickness=1)
+    style.configure("Canvas.TFrame", background="#aaaaaa")
     style.configure("Tree.TFrame", background="#e6e6e6")
     style.configure("Root.TFrame", background="#f0f0f5")
 
@@ -34,13 +34,12 @@ class MainWindow(tk.Tk):
         self.canvas = CanvasArea(self)
         self.tree_panel = TreePanel(self)
         self.button_collapse = ttk.Button(self, text="<")
-        self.property_editor = PropertyEditor(self)
-
+        #self.property_editor = PropertyEditor(self)
 
         self.canvas.place(x=0, y=0, relwidth=1.0, relheight=1.0)
         self.tree_panel.place(x=0, y=0, width=DEFAULT_TREE_WIDTH, relheight=1.0, anchor="nw")
         self.button_collapse.place(x=DEFAULT_TREE_WIDTH + BUTTON_PADDING, rely=0.5, height=50, width=20, anchor="e")
-        self.property_editor.place(relx=1.0, y=0, width=300, relheight=1.0, anchor="ne")
+        #self.property_editor.place(relx=1.0, y=0, width=300, relheight=1.0, anchor="ne")
 
     def _setup_binds(self):
         self.button_collapse.configure(command=self._collapse_tree_panel)
