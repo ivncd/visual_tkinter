@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from .components import EditableTreeview
+from core.treeview_manager import TreeviewManager
 
 class WidgetsFrame(ttk.Frame):
     def __init__(self, parent : tk.Misc, **kwargs):
@@ -41,6 +42,8 @@ class TreeFrame(ttk.Frame):
         self.tree.heading("#0", text="WIDGETS")
         self.tree.grid(row=0, column=0, sticky="nsew", pady=(0, 20))
 
+        TreeviewManager(self.tree).setup_bindings()
+
     def _setup_layout(self):
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -60,6 +63,7 @@ class TreePanel(ttk.Frame):
 
         self.frame_tree = TreeFrame(self, style="Treeview")
         self.frame_tree.grid(row=1, column=0, columnspan=2, sticky="nsew", padx=10, pady=10)
+
 
     def _setup_layout(self):
         self.columnconfigure(0, weight=1)
