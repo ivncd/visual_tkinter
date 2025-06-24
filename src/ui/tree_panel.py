@@ -8,7 +8,12 @@ class WidgetsFrame(ttk.Frame):
     def __init__(self, parent : tk.Misc, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.WIDGET_NAMES = ["Window", "Frame", "Button", "Label", "Combobox"] #TODO: Add more widgets
+        self.WIDGETS_DICT = {
+            "Window and containers": ["Window", "Frame", "LabelFrame", "Canvas", "PanedWindow", "Toplevel"],
+            "Basic widgets": ["Button", "Label", "Entry", "Text", "Message"],
+            "Selection and input": ["Checkbutton", "Radiobutton", "Spinbox", "Listbox", "Scale", "Combobox"],
+            "Advanced widgets": ["Scrollbar", "Menu", "Menubutton", "Notebook", "Treeview", "Progressbar", "Separator", "Sizegrip"]
+        }
 
         self._setup_layout()
         self._setup_widgets()
@@ -18,13 +23,20 @@ class WidgetsFrame(ttk.Frame):
         y = self.button_add_widget.winfo_rooty() + self.button_add_widget.winfo_height()
         self.menu.tk_popup(x, y)
         
+
     def _setup_widgets(self):
         self.button_add_widget = ttk.Button(self, text="Add widget", command=self._show_menu)
         self.button_add_widget.grid(row=0, column=0, sticky="nswe")
 
         self.menu = tk.Menu(self, tearoff=0)
-        for name in self.WIDGET_NAMES:
-            self.menu.add_command(label=name)
+
+        for category, widget_names in self.WIDGETS_DICT.items():
+            submenu = tk.Menu(self.menu, tearoff=0)
+            for name in widget_names:
+                submenu.add_command(label=name)
+
+            self.menu.add_cascade(label=category, menu=submenu)
+
 
     def _setup_layout(self):
         self.columnconfigure(0, weight=1)
