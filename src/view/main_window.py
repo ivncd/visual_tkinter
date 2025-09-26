@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import sv_ttk
 
 from .tree_panel import TreePanel
 from .design_area import DesignArea
@@ -25,7 +24,6 @@ class MainWindow(tk.Tk):
         self.geometry("1200x800")
 
         load_editor_theme()
-        #sv_ttk.set_theme("light")
         self.collapsed = False
         self._setup_layout()
 

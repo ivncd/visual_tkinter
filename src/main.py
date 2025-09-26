@@ -1,7 +1,9 @@
-from ui.main_window import MainWindow 
-from core.main_controller import MainController
+from view.main_window import MainWindow 
+from presenter.main_window_presenter import MainWindowPresenter
+from model.main_window_model import MainWindowModel
 
 
 window = MainWindow()
-MainController(window)
+model = MainWindowModel()
+MainWindowPresenter(window, model)
 window.mainloop()

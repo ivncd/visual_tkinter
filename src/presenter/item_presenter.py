@@ -1,6 +1,7 @@
-from core.treeview_manager import TreeviewManager
-from ui.design_area import DesignArea
-from ui.components import CONTAINER
+from model.tree_model import TreeModel
+from presenter.tree_presenter import TreeviewPresenter
+from view.design_area import DesignArea
+from view.tree_panel import CONTAINER
 
 import tkinter as tk
 from tkinter import ttk
@@ -38,23 +39,29 @@ WIDGET_CLASSES = {
     "Separator": ttk.Separator
 }
 
-class ItemManager:
-    def __init__(self, treeview_manager : TreeviewManager, design_area : DesignArea) -> None:
+class ItemPresenter:
+    def __init__(self, treeview_manager: TreeviewPresenter, design_area: DesignArea, tree_model: TreeModel):
         self.treeview_manager = treeview_manager
         self.treeview = self.treeview_manager.treeview
         self.design_area = design_area
+        self.tree_model = tree_model
 
-    def create_widget(self, widget_name : str):
-        parent_id = self.treeview_manager.selected_item
+    def create_widget(self, widget_name: str):
+        parent_id = self.tree_model.get_selected_item()
         if not parent_id:
-            raise ValueError("There is not any item selected to use it as a parent")
+            raise ValueError("No parent item selected.")
 
         if CONTAINER not in self.treeview.item(parent_id, "tags"):
-            raise ValueError("The item selected is not a container so it can't be used as a parent")
+            raise ValueError("Selected item is not a container.")
 
-        parent_widget = self.treeview_manager.id_to_widget.get(parent_id)
 
         tags = ("widget",) if widget_name not in CONTAINERS else (CONTAINER,)
         widget_id = self.treeview.insert(parent_id, "end", text=widget_name, tags=tags)
+        parent_widget = self.tree_model.get_widget(parent_id)
 
-        #TODO: ADD WIDGETS TO THE DESIGN AREA WITH THE CORRESPONDING PARENT
+        # TODO: Add widget to design area with appropriate parent
+
+
+
+
+
