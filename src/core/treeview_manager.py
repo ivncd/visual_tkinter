@@ -7,26 +7,22 @@ class TreeviewManager:
     def __init__(self, treeview : EditableTreeview):
         self.treeview = treeview
         self.menu_manager = MenuManager(self.treeview, self)
+        self.id_to_widget = {}
 
         self.entry = None
+        self.selected_item = None
         self._dragging_item = None
         self._dragging_cursor = None
         self._highlighted_item = None 
-
 
     def setup_bindings(self):
         # Menu bindings
         self.treeview.bind("<Button-3>", self.menu_manager.show_menu, add="+")
 
-        # Edit bindings
-        # TODO: Check if it's necessary the double click or only the menu
-        #self.treeview.bind("<Double-1>", self._rename_item)
-
         # Drag and drop bindings
         self.treeview.bind("<ButtonPress-1>", self._on_button_press)
         self.treeview.bind("<B1-Motion>", self._on_motion)
         self.treeview.bind("<ButtonRelease-1>", self._on_button_release)
-
 
     # -- EDIT METHODS --
     def _rename_item(self, event):
@@ -43,7 +39,7 @@ class TreeviewManager:
 
         value = self.treeview.item(item_id, "text")
         self.entry = tk.Entry(self.treeview)
-        self.entry.place(x=int(x) + 20, y=y, width=width, height=height)
+        self.entry.place(x=int(x) + 15, y=y, width=width, height=height)
         self.entry.insert(0, value)
         self.entry.focus()
 
@@ -69,6 +65,11 @@ class TreeviewManager:
         item = self.treeview.identify_row(event.y)
         if item:
             self._dragging_item = item
+            self.selected_item = item
+        elif len(self.treeview.selection()) > 0: # Remove highlight when there is no selected_item
+            self.treeview.selection_remove(self.treeview.selection()[0])
+            self.selected_item = None
+                
 
     def _on_motion(self, event):
         if not self._dragging_item:
@@ -80,9 +81,8 @@ class TreeviewManager:
         # Check the item on the mouse and highlight it if there is a change.
         item_under_cursor = self.treeview.identify_row(event.y)
 
-        is_container = CONTAINER in self.treeview.item(item_under_cursor, "tags")
-
         # If item is a container you can move inside
+        is_container = CONTAINER in self.treeview.item(item_under_cursor, "tags")
         if is_container and item_under_cursor != self._highlighted_item:
             if self._highlighted_item:
                 old_tags = list(self.treeview.item(self._highlighted_item, "tags"))
@@ -108,7 +108,7 @@ class TreeviewManager:
         target_item = self.treeview.identify_row(event.y)
         if target_item and CONTAINER in self.treeview.item(target_item, "tags") and target_item != self._dragging_item and \
             not self._is_descendant(target_item, self._dragging_item):
-            self.treeview.move(self._dragging_item, target_item, tk.END) #type: ignore
+            self.treeview.move(self._dragging_item, target_item, tk.END)
 
         # Remove highlight and change cursor back
         if self._highlighted_item:
@@ -162,6 +162,8 @@ class MenuManager:
     # TODO: Add confirmation window with "do not show again" checkbox
     def _delete_item(self, item_id):
         self.treeview.delete(item_id)
+        if self.manager.selected_item == item_id:
+            self.manager.selected_item = None
 
     def _move_item(self, item_id, index_dif):
         parent = self.treeview.parent(item_id)
