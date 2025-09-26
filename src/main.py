@@ -1,8 +1,7 @@
-import tkinter as tk
-from tkinter import ttk
-
 from ui.main_window import MainWindow 
+from core.main_controller import MainController
 
 
 window = MainWindow()
+MainController(window)
 window.mainloop()
