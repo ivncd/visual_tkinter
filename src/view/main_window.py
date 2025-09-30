@@ -5,9 +5,8 @@ from .tree_panel import TreePanel
 from .design_area import DesignArea
 from .property_editor import PropertyEditor
 
-DEFAULT_TREE_WIDTH= 220
-COLLAPSED_TREE_WIDTH = 10
-BUTTON_PADDING = 12
+from .consts import DEFAULT_TREE_WIDTH, COLLAPSED_TREE_WIDTH, BUTTON_PADDING
+
 
 def load_editor_theme():
     style = ttk.Style()
