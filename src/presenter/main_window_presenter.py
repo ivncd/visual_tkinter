@@ -1,7 +1,11 @@
 from view.main_window import MainWindow, BUTTON_PADDING, COLLAPSED_TREE_WIDTH, DEFAULT_TREE_WIDTH
 from model.main_window_model import MainWindowModel
+
 from .tree_presenter import TreeviewPresenter
 from .item_presenter import ItemPresenter
+from view.window import CreateProjectWindow
+
+from utils.window_utils import center_window
 
 class MainWindowPresenter:
     def __init__(self, main_view: MainWindow, model: MainWindowModel):
@@ -10,6 +14,7 @@ class MainWindowPresenter:
 
         self._setup_presenters()
         self._setup_binds()
+        self.view.setup_menu(self.create_window)
 
     def _setup_presenters(self):
         treeview = self.view.tree_panel.frame_tree.tree
@@ -19,6 +24,11 @@ class MainWindowPresenter:
 
         self.view.tree_panel.frame_widgets.setup_menu(self.item_presenter.create_widget)
 
+    def create_window(self) -> None:
+        create_toplevel = CreateProjectWindow(self.view)
+        center_window(create_toplevel)
+
+    # -- SETUP COLLAPSE ACTION TO TREE PANEL --
     def _setup_binds(self):
         self.view.button_collapse.configure(command=self._collapse_tree_panel)
 

@@ -1,12 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
+from typing import Callable
 
 from .tree_panel import TreePanel
 from .design_area import DesignArea
 from .property_editor import PropertyEditor
 
 from .consts import DEFAULT_TREE_WIDTH, COLLAPSED_TREE_WIDTH, BUTTON_PADDING
-
+from utils.window_utils import center_window
 
 def load_editor_theme():
     style = ttk.Style()
@@ -22,6 +23,7 @@ class MainWindow(tk.Tk):
         self.title("Tkinter UI Creator")
         self.geometry("1200x800")
 
+        center_window(self)
         load_editor_theme()
         self.collapsed = False
         self._setup_layout()
@@ -36,3 +38,12 @@ class MainWindow(tk.Tk):
         self.tree_panel.place(x=0, y=0, width=DEFAULT_TREE_WIDTH, relheight=1.0, anchor="nw")
         self.button_collapse.place(x=DEFAULT_TREE_WIDTH + BUTTON_PADDING, rely=0.5, height=50, width=20, anchor="e")
         #self.property_editor.place(relx=1.0, y=0, width=300, relheight=1.0, anchor="ne")
+
+    def setup_menu(self, create_window : Callable) -> None:
+        menu = tk.Menu(self)
+
+        file_menu = tk.Menu(menu, tearoff=0)
+        file_menu.add_command(label="Create", command=create_window)
+
+        menu.add_cascade(label="File", menu=file_menu)
+        self.config(menu=menu)
